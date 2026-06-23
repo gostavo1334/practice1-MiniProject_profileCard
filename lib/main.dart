@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'student_card_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,11 +21,27 @@ class CounterPage extends StatefulWidget {
 
 class _CounterPageState extends State<CounterPage> {
   int count = 0;
+  int _selectedIndex = 0;   // ← NEW: tracks which tab is selected
 
   void increase() {
     setState(() {
       count++;
     });
+  }
+
+  // ← NEW: handles taps on the bottom nav items
+  void _onNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 1) {
+      // "Student Card" tab tapped → navigate to new page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => StudentCardPage()),
+      );
+    }
   }
 
   @override
@@ -36,7 +53,6 @@ class _CounterPageState extends State<CounterPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             Container(
               width: 320,
               padding: EdgeInsets.all(20),
@@ -54,39 +70,25 @@ class _CounterPageState extends State<CounterPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Profile Image
                   CircleAvatar(
                     radius: 50,
                     backgroundImage: AssetImage('assets/profile.jpg'),
-                    // Replace with NetworkImage(...) or ImagePicker later
                   ),
-
                   SizedBox(height: 20),
-
-                  // Name
                   Text(
                     'John Doe',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-
                   SizedBox(height: 8),
-
-                  // Job Title
                   Text(
                     'Flutter Developer',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
             ),
 
-            SizedBox(height: 40,),
+            SizedBox(height: 40),
 
             Container(
               padding: EdgeInsets.all(50),
@@ -94,46 +96,18 @@ class _CounterPageState extends State<CounterPage> {
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.blue,
               ),
-
               child: Text(
                 'flutter container',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 30,
-                ),
+                style: TextStyle(color: Colors.green, fontSize: 30),
               ),
             ),
 
-
-            Text(
-              '$count',
-              style: TextStyle(fontSize: 70),
-            ),
+            Text('$count', style: TextStyle(fontSize: 70)),
             SizedBox(height: 10),
-            Text(
-                'Hello',
-                style: TextStyle(fontSize: 70),
-            ),
+            Text('Hello', style: TextStyle(fontSize: 70)),
           ],
         ),
       ),
-
-/*   bottomNavigationBar: BottomAppBar(
-      color: Colors.green[50],
-      child: SizedBox(
-        height: 60,
-        child: Center(
-          child: Text(
-              'Bottom Navigation',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 18,
-              ),
-          ),
-        ),
-      ),
-    ),
-      */
       floatingActionButton: FloatingActionButton(
         onPressed: increase,
         child: Icon(Icons.add),
@@ -142,14 +116,16 @@ class _CounterPageState extends State<CounterPage> {
         backgroundColor: Colors.blue,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,   // ← NEW
+        onTap: _onNavTapped,            // ← NEW: connects taps to the handler
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.badge),       // ← changed icon to suit "Student Card"
+            label: 'Student Card',          // ← renamed from "Settings"
           ),
         ],
       ),
